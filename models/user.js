@@ -38,13 +38,24 @@ userSchema.pre("findOneAndUpdate", runValidatorsAtUpdate);
 userSchema.post("findOneAndUpdate", handleSaveError);
 
 const registerSchema = Joi.object({
-  password: Joi.string().min(6).required(),
-  email: Joi.string().required(),
+  password: Joi.string().min(6).required().messages({
+    "any.required": `missing required "password" field`,
+  }),
+  email: Joi.string().required().messages({
+    "any.required": `missing required "email" field`,
+  }),
+  subscription: Joi.string(),
+  token: Joi.string(),
 });
 
 const loginSchema = Joi.object({
-  password: Joi.string().min(6).required(),
-  email: Joi.string().pattern(emailRegexp).required(),
+  password: Joi.string().min(6).required().messages({
+    "any.required": `missing required "password" field`,
+  }),
+  email: Joi.string().pattern(emailRegexp).required().messages({
+    "any.required": `missing required "email" field`,
+  }),
+  token: Joi.string(),
 });
 
 const User = model("user", userSchema);
